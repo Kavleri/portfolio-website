@@ -1,109 +1,21 @@
-'use client';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../keystatic.config';
+import { Card } from './components/Card';
+import { Section } from './components/Section';
+import { Hero } from './components/Hero';
+import { Code, Cpu, Globe } from 'lucide-react';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Terminal, Code, Cpu, Globe, ExternalLink, Github, Linkedin, Mail } from 'lucide-react';
-import projectsData from './data/projects.json';
+// Create a reader instance
+const reader = createReader(process.cwd(), keystaticConfig);
 
-const TypingEffect = ({ text, delay = 0 }: { text: string; delay?: number }) => {
-  const [displayedText, setDisplayedText] = useState('');
-  
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      let i = 0;
-      const interval = setInterval(() => {
-        setDisplayedText(text.slice(0, i + 1));
-        i++;
-        if (i === text.length) clearInterval(interval);
-      }, 50); // Speed of typing
-      return () => clearInterval(interval);
-    }, delay);
-    return () => clearTimeout(timeout);
-  }, [text, delay]);
+export default async function Home() {
+  // Fetch projects from Keystatic
+  const projects = await reader.collections.projects.all();
 
-  return <span>{displayedText}</span>;
-};
-
-const Section = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.8, delay }}
-    className="mb-24"
-  >
-    {children}
-  </motion.div>
-);
-
-const Card = ({ title, desc, tech, link }: { title: string; desc: string; tech: string[]; link?: string }) => (
-  <motion.a 
-    href={link}
-    target="_blank"
-    rel="noopener noreferrer"
-    whileHover={{ scale: 1.02, borderColor: 'var(--primary)' }}
-    className="block bg-neutral-900/50 border border-neutral-800 p-6 rounded-lg backdrop-blur-sm hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300 group"
-  >
-    <div className="flex justify-between items-start mb-4">
-      <h3 className="text-xl font-bold text-white font-mono group-hover:text-primary transition-colors">{title}</h3>
-      {link && <ExternalLink size={18} className="text-neutral-400 group-hover:text-primary" />}
-    </div>
-    <p className="text-neutral-400 mb-4 text-sm leading-relaxed">{desc}</p>
-    <div className="flex flex-wrap gap-2">
-      {tech.map((t, i) => (
-        <span key={i} className="text-xs font-mono px-2 py-1 rounded bg-neutral-800 text-primary border border-neutral-700/50">
-          {t}
-        </span>
-      ))}
-    </div>
-  </motion.a>
-);
-
-export default function Home() {
   return (
     <main className="min-h-screen p-8 md:p-24 max-w-6xl mx-auto selection:bg-emerald-500/30">
+      <Hero />
       
-      {/* Hero Section */}
-      <section className="min-h-[80vh] flex flex-col justify-center">
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ duration: 1 }}
-          className="font-mono text-primary mb-4 flex items-center gap-2"
-        >
-          <Terminal size={18} />
-          <span>root@kavleri:~$ ./init_portfolio.sh</span>
-        </motion.div>
-
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight glitch-text">
-          <TypingEffect text="Muhammad Hisyam" delay={500} />
-          <span className="text-primary animate-pulse">_</span>
-        </h1>
-        
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 1 }}
-          className="text-xl text-neutral-400 max-w-2xl leading-relaxed"
-        >
-          Undergraduate Student & Full-Stack Developer. 
-          Specializing in <span className="text-white font-medium">Cyber Security</span>, <span className="text-white font-medium">Web Development</span>, and <span className="text-white font-medium">Open Source</span>.
-          Crafting elegant solutions for complex problems.
-        </motion.p>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.5, duration: 0.8 }}
-          className="flex gap-6 mt-8"
-        >
-           {/* Social Links - Replace href with actual links */}
-          <a href="https://github.com/Kavleri" target="_blank" className="p-3 rounded-full bg-neutral-800 hover:bg-neutral-700 hover:text-primary transition-colors border border-neutral-700"><Github size={24} /></a>
-          <a href="https://linkedin.com/in/muhammad-hisyam-alfaris-529465332" target="_blank" className="p-3 rounded-full bg-neutral-800 hover:bg-neutral-700 hover:text-blue-400 transition-colors border border-neutral-700"><Linkedin size={24} /></a>
-          <a href="mailto:muhammadhisyamalfaris2085@gmail.com" className="p-3 rounded-full bg-neutral-800 hover:bg-neutral-700 hover:text-red-400 transition-colors border border-neutral-700"><Mail size={24} /></a>
-        </motion.div>
-      </section>
-
       {/* About Section */}
       <Section>
         <div className="flex items-center gap-4 mb-8">
@@ -153,13 +65,13 @@ export default function Home() {
           <div className="h-px bg-neutral-800 flex-grow"></div>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projectsData.map((project) => (
+          {projects.map((project) => (
             <Card 
-              key={project.id}
-              title={project.title} 
-              desc={project.description}
-              tech={project.tech}
-              link={project.link}
+              key={project.slug}
+              title={project.entry.title} 
+              desc={project.entry.description}
+              tech={project.entry.tech}
+              link={project.entry.link || '#'}
             />
           ))}
         </div>

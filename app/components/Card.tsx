@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 
-export const Card = ({ title, desc, tech, link }: { title: string; desc: string; tech: string[]; link?: string }) => (
+export const Card = ({ title, desc, tech, link }: { title: string; desc: string; tech: readonly string[]; link?: string }) => (
   <motion.a 
     href={link}
     target="_blank"

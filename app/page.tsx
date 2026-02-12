@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Terminal, Code, Cpu, Globe, ExternalLink, Github, Linkedin, Mail } from 'lucide-react';
-import Image from 'next/image';
+import projectsData from './data/projects.json';
 
 const TypingEffect = ({ text, delay = 0 }: { text: string; delay?: number }) => {
   const [displayedText, setDisplayedText] = useState('');
@@ -37,13 +37,16 @@ const Section = ({ children, delay = 0 }: { children: React.ReactNode; delay?: n
 );
 
 const Card = ({ title, desc, tech, link }: { title: string; desc: string; tech: string[]; link?: string }) => (
-  <motion.div 
+  <motion.a 
+    href={link}
+    target="_blank"
+    rel="noopener noreferrer"
     whileHover={{ scale: 1.02, borderColor: 'var(--primary)' }}
-    className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-lg backdrop-blur-sm hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300"
+    className="block bg-neutral-900/50 border border-neutral-800 p-6 rounded-lg backdrop-blur-sm hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300 group"
   >
     <div className="flex justify-between items-start mb-4">
-      <h3 className="text-xl font-bold text-white font-mono">{title}</h3>
-      {link && <ExternalLink size={18} className="text-neutral-400 hover:text-primary cursor-pointer" />}
+      <h3 className="text-xl font-bold text-white font-mono group-hover:text-primary transition-colors">{title}</h3>
+      {link && <ExternalLink size={18} className="text-neutral-400 group-hover:text-primary" />}
     </div>
     <p className="text-neutral-400 mb-4 text-sm leading-relaxed">{desc}</p>
     <div className="flex flex-wrap gap-2">
@@ -53,7 +56,7 @@ const Card = ({ title, desc, tech, link }: { title: string; desc: string; tech: 
         </span>
       ))}
     </div>
-  </motion.div>
+  </motion.a>
 );
 
 export default function Home() {
@@ -150,24 +153,15 @@ export default function Home() {
           <div className="h-px bg-neutral-800 flex-grow"></div>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card 
-            title="Kavleri Portfolio" 
-            desc="A modern, dark-themed portfolio website built with Next.js 14 and Tailwind CSS. Featuring smooth animations and a professional hacker aesthetic."
-            tech={['Next.js', 'Tailwind', 'Framer Motion']}
-            link="#"
-          />
-           <Card 
-            title="CyberSec Lab" 
-            desc="A virtual laboratory environment for testing network vulnerabilities and practicing penetration testing methodologies safely."
-            tech={['Python', 'Docker', 'Linux']}
-            link="#"
-          />
-           <Card 
-            title="E-Commerce API" 
-            desc="Scalable RESTful API for an e-commerce platform with authentication, payment gateway integration, and order management."
-            tech={['Laravel', 'MySQL', 'Redis']}
-            link="#"
-          />
+          {projectsData.map((project) => (
+            <Card 
+              key={project.id}
+              title={project.title} 
+              desc={project.description}
+              tech={project.tech}
+              link={project.link}
+            />
+          ))}
         </div>
       </Section>
 

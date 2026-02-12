@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Kavleri Portfolio",
+    "description": "A modern, dark-themed portfolio website built with Next.js 14 and Tailwind CSS. Featuring smooth animations and a professional hacker aesthetic.",
+    "tech": ["Next.js", "Tailwind", "Framer Motion"],
+    "link": "https://github.com/Kavleri/portfolio-website"
+  },
+  {
+    "id": 2,
+    "title": "CyberSec Lab",
+    "description": "A virtual laboratory environment for testing network vulnerabilities and practicing penetration testing methodologies safely.",
+    "tech": ["Python", "Docker", "Linux"],
+    "link": "https://github.com/Kavleri"
+  },
+  {
+    "id": 3,
+    "title": "E-Commerce API",
+    "description": "Scalable RESTful API for an e-commerce platform with authentication, payment gateway integration, and order management.",
+    "tech": ["Laravel", "MySQL", "Redis"],
+    "link": "https://github.com/Kavleri"
+  }
+]
